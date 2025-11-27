@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Home · Todo Suite{% endblock %}
+
+{% block content %}
+  <section style="background: rgba(15,23,42,0.85); border-radius: 1.75rem; padding: 2.5rem; border: 1px solid rgba(148,163,184,0.2); box-shadow: 0 20px 60px rgba(2,6,23,0.5);">
+    <p style="text-transform: uppercase; letter-spacing: 0.35em; color: rgba(16,185,129,0.7); font-size: 0.7rem; margin: 0;">
+      plan smarter
+    </p>
+    <h1 style="font-size: 2.75rem; margin: 0.75rem 0 0;">Welcome to Todo Suite</h1>
+    <p style="color: #94a3b8; margin: 0.75rem 0 2rem; font-size: 1.05rem;">
+      Capture tasks, assign due dates, and keep work flowing with a sleek, minimal UI.
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <a href="{% url 'todo-list' %}" style="text-decoration: none; border-radius: 999px; padding: 0.85rem 1.6rem; background: linear-gradient(135deg, #10b981, #06b6d4); color: #0f172a; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;">
+        Open your board
+      </a>
+      <a href="{% url 'admin:index' %}" style="text-decoration: none; border-radius: 999px; padding: 0.85rem 1.6rem; border: 1px solid rgba(148,163,184,0.4); color: #e2e8f0; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;">
+        Admin
+      </a>
+    </div>
+  </section>
+
+  <section style="margin-top: 2.5rem; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+    <article style="background: rgba(15,23,42,0.7); border-radius: 1.25rem; padding: 1.5rem; border: 1px solid rgba(148,163,184,0.2);">
+      <h2 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Create & edit</h2>
+      <p style="margin: 0; color: #94a3b8;">Inline forms let you capture titles, notes, priorities, and due dates without leaving the board.</p>
+    </article>
+    <article style="background: rgba(15,23,42,0.7); border-radius: 1.25rem; padding: 1.5rem; border: 1px solid rgba(148,163,184,0.2);">
+      <h2 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Track status</h2>
+      <p style="margin: 0; color: #94a3b8;">Switch between Active and Resolved views or quickly toggle completion right from the list.</p>
+    </article>
+    <article style="background: rgba(15,23,42,0.7); border-radius: 1.25rem; padding: 1.5rem; border: 1px solid rgba(148,163,184,0.2);">
+      <h2 style="margin: 0 0 0.5rem; font-size: 1.25rem;">Stay organized</h2>
+      <p style="margin: 0; color: #94a3b8;">Filter, sort, and clean up old tasks—everything syncs through Django’s ORM.</p>
+    </article>
+  </section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "todo_app/base.html" %}
+
+{% block title %}{{ view.object|default_if_none:"New Todo" }}{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h1 style="margin-top: 0;">{% if view.object %}Edit{% else %}Create{% endif %} TODO</h1>
+    <form method="post" style="display: grid; gap: 1rem;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="button" style="background: rgba(16,185,129,0.25); border: 1px solid rgba(16,185,129,0.6);">
+          Save
+        </button>
+        <a href="{% url 'todo-list' %}" class="button" style="text-decoration: none; background: rgba(148,163,184,0.2); border: 1px solid rgba(148,163,184,0.4);">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

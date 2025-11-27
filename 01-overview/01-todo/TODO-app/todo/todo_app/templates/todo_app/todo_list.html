@@ -1,0 +1,119 @@
+{% extends "todo_app/base.html" %}
+
+{% block title %}Todos{% endblock %}
+
+{% block content %}
+  <div class="card space-y-6">
+    <header>
+      <p class="text-xs uppercase tracking-[0.35em] text-emerald-300/80">stay organized</p>
+      <h1 style="font-size: 2.25rem; margin: 0.5rem 0 0;">Your TODOs</h1>
+      <p style="color: #94a3b8; margin-top: 0.35rem;">
+        Track tasks, set due dates, and mark progress.
+      </p>
+    </header>
+
+    <section style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <div style="flex: 1 1 160px; background: rgba(15,118,110,0.15); border-radius: 1rem; padding: 1rem;">
+        <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Total</p>
+        <p style="margin: 0.35rem 0 0; font-size: 1.85rem; font-weight: 600;">{{ totals.total }}</p>
+      </div>
+      <div style="flex: 1 1 160px; background: rgba(99,102,241,0.15); border-radius: 1rem; padding: 1rem;">
+        <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Active</p>
+        <p style="margin: 0.35rem 0 0; font-size: 1.85rem; font-weight: 600;">{{ totals.active }}</p>
+      </div>
+      <div style="flex: 1 1 160px; background: rgba(16,185,129,0.15); border-radius: 1rem; padding: 1rem;">
+        <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Resolved</p>
+        <p style="margin: 0.35rem 0 0; font-size: 1.85rem; font-weight: 600;">{{ totals.resolved }}</p>
+      </div>
+    </section>
+
+    <section>
+      <form action="{% url 'todo-create' %}" method="post" style="display: grid; gap: 0.75rem;">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          {{ form.title.label_tag }}
+          {{ form.title }}
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          {{ form.notes.label_tag }}
+          {{ form.notes }}
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <label style="flex: 1 1 160px;">Due date {{ form.due_date }}</label>
+          <label style="flex: 1 1 140px;">Priority {{ form.priority }}</label>
+          <label style="display: flex; align-items: center; gap: 0.5rem;">
+            {{ form.is_resolved }} Mark as resolved
+          </label>
+        </div>
+        <button type="submit" style="align-self: flex-start;" class="button">Add TODO</button>
+      </form>
+    </section>
+
+    <section>
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+        {% for key, label in filter_options %}
+          <a
+            href="{% if key == 'all' %}.{% else %}?status={{ key }}{% endif %}"
+            class="button"
+            style="background: {% if status_filter == key %}rgba(16,185,129,0.2){% else %}rgba(148,163,184,0.15){% endif %}; border: 1px solid rgba(148,163,184,0.35); text-decoration: none;"
+          >
+            {{ label }}
+          </a>
+        {% endfor %}
+      </div>
+      {% if todos %}
+        <table>
+          <thead>
+            <tr style="text-align: left; color: #94a3b8; font-size: 0.9rem;">
+              <th>Task</th>
+              <th>Due</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for todo in todos %}
+              <tr>
+                <td>
+                  <strong>{{ todo.title }}</strong>
+                  {% if todo.notes %}
+                    <div style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.15rem;">
+                      {{ todo.notes|linebreaksbr }}
+                    </div>
+                  {% endif %}
+                </td>
+                <td>{{ todo.due_date|default:"—" }}</td>
+                <td>{{ todo.priority }}</td>
+                <td>
+                  {% if todo.is_resolved %}
+                    <span style="color: #34d399;">Resolved</span>
+                  {% else %}
+                    <span style="color: #fbbf24;">Active</span>
+                  {% endif %}
+                </td>
+                <td style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                  <form action="{% url 'todo-toggle' todo.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="button" style="background: rgba(59,130,246,0.2);">
+                      {% if todo.is_resolved %}Reopen{% else %}Resolve{% endif %}
+                    </button>
+                  </form>
+                  <a href="{% url 'todo-update' todo.pk %}" class="button" style="background: rgba(249,115,22,0.2); text-decoration: none;">
+                    Edit
+                  </a>
+                  <a href="{% url 'todo-delete' todo.pk %}" class="button" style="background: rgba(248,113,113,0.2); text-decoration: none;">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p style="color: #94a3b8;">No todos yet. Add one above!</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}
